@@ -29,34 +29,48 @@ var createScene = function() {
 
     //This creates a light, aiming 0,1,0 - to the sky (non-mesh)
     var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
-
+    
     //Default intensity is 1. Let's dim the light a small amount
     light.intensity = 0.7;
+    //light.groundColor = new BABYLON.Color3.White(); //Remove shadows
+
+    //Skybox
+    // var skybox = BABYLON.MeshBuilder.CreateBox("skybox", {size: 1000}, scene);
+    // skybox.material = new BABYLON.StandardMaterial("skybox", scene);
+    // skybox.material.backFaceCulling = false;
+    // skybox.infiniteDistance = true;
+    // skybox.renderingGroupId = 0;
+    // skybox.material.reflectionTexture = new BABYLON.CubeTexture("./images/2k_stars.jpg", scene);
+    // skybox.material.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+    // skybox.material.diffuseColor = new BABYLON.Color3(0, 0, 0);
+    // skybox.material.specularColor = new BABYLON.Color3(0, 0, 0);
 
     //Creating objects
     //var ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 6, height: 6}, scene);
 
-    var sphere1 = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 2, segments: 32}, scene);
-    var sphere2 = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 2, segments: 32}, scene);
-    sphere1.rotate(BABYLON.Axis.X, Math.PI, BABYLON.Space.LOCAL);
-    sphere2.rotate(BABYLON.Axis.X, Math.PI, BABYLON.Space.LOCAL);
-    sphere2.scaling = new BABYLON.Vector3(109, 109, 109);
-    sphere2.position.x = 150;
+    var earth = BABYLON.MeshBuilder.CreateSphere("earthMesh", {diameter: 2, segments: 32}, scene);
+    var sun = BABYLON.MeshBuilder.CreateSphere("sunMesh", {diameter: 2, segments: 32}, scene);
+    earth.renderingGroupId = 1;
+    sun.renderingGroupId = 1;
+    earth.rotate(BABYLON.Axis.X, Math.PI, BABYLON.Space.LOCAL);
+    sun.rotate(BABYLON.Axis.X, Math.PI, BABYLON.Space.LOCAL);
+    sun.scaling = new BABYLON.Vector3(109, 109, 109);
+    sun.position.x = 150;
     
     //Textures
-    let sphere1Mat = new BABYLON.StandardMaterial("Sphere1 Material", scene);
-    sphere1.material = sphere1Mat;
-    let sphere2Mat = new BABYLON.StandardMaterial("Sphere2 Material", scene);
-    sphere2.material = sphere2Mat;
+    let earthMat = new BABYLON.StandardMaterial("earthMaterial", scene);
+    earth.material = earthMat;
+    let sunMat = new BABYLON.StandardMaterial("sunMaterial", scene);
+    sun.material = sunMat;
 
     //https://www.solarsystemscope.com/textures/
     //https://doc.babylonjs.com/features/featuresDeepDive/environment/skybox
-    sphere1Mat.diffuseTexture = new BABYLON.Texture("./images/2k_earth_daymap.jpg", scene);
-    sphere2Mat.diffuseTexture = new BABYLON.Texture("./images/2k_sun.jpg", scene);
-    //sphere2Mat.diffuseColor = BABYLON.Color3.Red();
+    earthMat.diffuseTexture = new BABYLON.Texture("./images/2k_earth_daymap.jpg", scene);
+    sunMat.diffuseTexture = new BABYLON.Texture("./images/2k_sun.jpg", scene);
+    //sunMat.diffuseColor = BABYLON.Color3.Red();
 
     //Set camera target
-    camera.setTarget(sphere1);
+    camera.setTarget(earth);
 
     //GUI
     var gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
@@ -85,12 +99,10 @@ var createScene = function() {
 
     //Planet Navigation
     btnBack.onPointerClickObservable.add(function() {
-        //camera.lockedTarget = sphere1;
-        camera.setTarget(sphere1);
+        camera.setTarget(earth);
     });
     btnNext.onPointerClickObservable.add(function() {
-        //camera.lockedTarget = sphere2;
-        camera.setTarget(sphere2);
+        camera.setTarget(sun);
     });
 
     return scene;
