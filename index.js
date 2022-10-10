@@ -24,6 +24,8 @@ var createScene = function() {
 
     //This attaches the camera to the canvas and makes interactable
     camera.attachControl(canvas, true);
+    camera.useBouncingBehavior = true;
+    camera.useFramingBehavior = true;
 
     //This creates a light, aiming 0,1,0 - to the sky (non-mesh)
     var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
@@ -36,7 +38,10 @@ var createScene = function() {
 
     var sphere1 = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 2, segments: 32}, scene);
     var sphere2 = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 2, segments: 32}, scene);
-    sphere2.position.x = 3;
+    sphere1.rotate(BABYLON.Axis.X, Math.PI, BABYLON.Space.LOCAL);
+    sphere2.rotate(BABYLON.Axis.X, Math.PI, BABYLON.Space.LOCAL);
+    sphere2.scaling = new BABYLON.Vector3(109, 109, 109);
+    sphere2.position.x = 150;
     
     //Textures
     let sphere1Mat = new BABYLON.StandardMaterial("Sphere1 Material", scene);
@@ -44,11 +49,14 @@ var createScene = function() {
     let sphere2Mat = new BABYLON.StandardMaterial("Sphere2 Material", scene);
     sphere2.material = sphere2Mat;
 
-    sphere1.material.diffuseColor = BABYLON.Color3.Green();
-    sphere2.material.diffuseColor = BABYLON.Color3.Red();
+    //https://www.solarsystemscope.com/textures/
+    //https://doc.babylonjs.com/features/featuresDeepDive/environment/skybox
+    sphere1Mat.diffuseTexture = new BABYLON.Texture("./images/2k_earth_daymap.jpg", scene);
+    sphere2Mat.diffuseTexture = new BABYLON.Texture("./images/2k_sun.jpg", scene);
+    //sphere2Mat.diffuseColor = BABYLON.Color3.Red();
 
     //Set camera target
-    camera.lockedTarget = sphere1;
+    camera.setTarget(sphere1);
 
     //GUI
     var gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
@@ -77,10 +85,12 @@ var createScene = function() {
 
     //Planet Navigation
     btnBack.onPointerClickObservable.add(function() {
-        camera.lockedTarget = sphere1;
+        //camera.lockedTarget = sphere1;
+        camera.setTarget(sphere1);
     });
     btnNext.onPointerClickObservable.add(function() {
-        camera.lockedTarget = sphere2;
+        //camera.lockedTarget = sphere2;
+        camera.setTarget(sphere2);
     });
 
     return scene;
