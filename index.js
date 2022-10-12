@@ -45,6 +45,14 @@ var createScene = function() {
     // skybox.material.diffuseColor = new BABYLON.Color3(0, 0, 0);
     // skybox.material.specularColor = new BABYLON.Color3(0, 0, 0);
 
+    async function getData() {
+        const request = new Request("./planets.json");
+        const response = await fetch(request);
+        const planetsData = await response.json();
+        //return planetsData;
+        console.log(planetsData);
+    }
+
     //Creating objects
     //var ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 6, height: 6}, scene);
 
