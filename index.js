@@ -70,10 +70,9 @@ var createScene = function() {
     jupiter.material = new BABYLON.StandardMaterial("jupiterMaterial", scene);
     sun.material = new BABYLON.StandardMaterial("sunMaterial", scene);
 
-    //https://www.solarsystemscope.com/textures/
-    earth.material.diffuseTexture = new BABYLON.Texture("./images/2k_earth_daymap.jpg", scene);
-    jupiter.material.diffuseTexture = new BABYLON.Texture("./images/2k_jupiter.jpg", scene);
-    sun.material.diffuseTexture = new BABYLON.Texture("./images/2k_sun.jpg", scene);
+    earth.material.diffuseTexture = new BABYLON.Texture(planetsData.earth.texture, scene);
+    jupiter.material.diffuseTexture = new BABYLON.Texture(planetsData.jupiter.texture, scene);
+    sun.material.diffuseTexture = new BABYLON.Texture(planetsData.sun.texture, scene);
 
     //Set camera target
     camera.setTarget(earth);
