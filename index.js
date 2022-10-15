@@ -35,47 +35,45 @@ var createScene = function() {
     //light.groundColor = new BABYLON.Color3.White(); //Remove shadows
 
     //Skybox
-    // var skybox = BABYLON.MeshBuilder.CreateBox("skybox", {size: 1000}, scene);
-    // skybox.material = new BABYLON.StandardMaterial("skybox", scene);
-    // skybox.material.backFaceCulling = false;
-    // skybox.infiniteDistance = true;
-    // skybox.renderingGroupId = 0;
-    // skybox.material.reflectionTexture = new BABYLON.CubeTexture("./images/2k_stars.jpg", scene);
-    // skybox.material.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-    // skybox.material.diffuseColor = new BABYLON.Color3(0, 0, 0);
-    // skybox.material.specularColor = new BABYLON.Color3(0, 0, 0);
-
-    async function getData() {
-        const request = new Request("./planets.json");
-        const response = await fetch(request);
-        const planetsData = await response.json();
-        //return planetsData;
-        console.log(planetsData);
-    }
+    var skybox = BABYLON.MeshBuilder.CreateBox("skybox", {size: 1000}, scene);
+    skybox.material = new BABYLON.StandardMaterial("skybox", scene);
+    skybox.material.backFaceCulling = false;
+    skybox.infiniteDistance = true;
+    skybox.renderingGroupId = 0;
+    skybox.material.reflectionTexture = new BABYLON.CubeTexture("./images/2k_skybox/skybox", scene);
+    skybox.material.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+    skybox.material.diffuseColor = new BABYLON.Color3(0, 0, 0);
+    skybox.material.specularColor = new BABYLON.Color3(0, 0, 0);
 
     //Creating objects
-    //var ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 6, height: 6}, scene);
+    var earth = BABYLON.MeshBuilder.CreateSphere("earthMesh", {diameter: 1, segments: 32}, scene);
+    var jupiter = BABYLON.MeshBuilder.CreateSphere("jupiterMesh", {diameter: 1, segments: 32}, scene);
+    var sun = BABYLON.MeshBuilder.CreateSphere("sunMesh", {diameter: 1, segments: 32}, scene);
 
-    var earth = BABYLON.MeshBuilder.CreateSphere("earthMesh", {diameter: 2, segments: 32}, scene);
-    var sun = BABYLON.MeshBuilder.CreateSphere("sunMesh", {diameter: 2, segments: 32}, scene);
     earth.renderingGroupId = 1;
+    jupiter.renderingGroupId = 1;
     sun.renderingGroupId = 1;
+
     earth.rotate(BABYLON.Axis.X, Math.PI, BABYLON.Space.LOCAL);
+    jupiter.rotate(BABYLON.Axis.X, Math.PI, BABYLON.Space.LOCAL);
     sun.rotate(BABYLON.Axis.X, Math.PI, BABYLON.Space.LOCAL);
-    sun.scaling = new BABYLON.Vector3(109, 109, 109);
-    sun.position.x = 150;
+
+    jupiter.scaling = new BABYLON.Vector3(planetsData.jupiter.size, planetsData.jupiter.size, planetsData.jupiter.size);
+    sun.scaling = new BABYLON.Vector3(planetsData.sun.size, planetsData.sun.size, planetsData.sun.size);
+
+    var divider = 10;
+    jupiter.position.x = (earth.scaling.x / 2) + divider + (jupiter.scaling.x / 2);
+    sun.position.x = jupiter.position.x + (jupiter.scaling.x / 2) + divider + (sun.scaling.x / 2);
     
     //Textures
-    let earthMat = new BABYLON.StandardMaterial("earthMaterial", scene);
-    earth.material = earthMat;
-    let sunMat = new BABYLON.StandardMaterial("sunMaterial", scene);
-    sun.material = sunMat;
+    earth.material = new BABYLON.StandardMaterial("earthMaterial", scene);
+    jupiter.material = new BABYLON.StandardMaterial("jupiterMaterial", scene);
+    sun.material = new BABYLON.StandardMaterial("sunMaterial", scene);
 
     //https://www.solarsystemscope.com/textures/
-    //https://doc.babylonjs.com/features/featuresDeepDive/environment/skybox
-    earthMat.diffuseTexture = new BABYLON.Texture("./images/2k_earth_daymap.jpg", scene);
-    sunMat.diffuseTexture = new BABYLON.Texture("./images/2k_sun.jpg", scene);
-    //sunMat.diffuseColor = BABYLON.Color3.Red();
+    earth.material.diffuseTexture = new BABYLON.Texture("./images/2k_earth_daymap.jpg", scene);
+    jupiter.material.diffuseTexture = new BABYLON.Texture("./images/2k_jupiter.jpg", scene);
+    sun.material.diffuseTexture = new BABYLON.Texture("./images/2k_sun.jpg", scene);
 
     //Set camera target
     camera.setTarget(earth);
