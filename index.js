@@ -6,31 +6,30 @@ var startRenderLoop = function(engine, canvas) {
             sceneToRender.render();
         }
     });
-}
+};
 
 var engine = null;
 var scene = null;
 var sceneToRender = null;
 var createDefaultEngine = function() {
-    return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true,  disableWebGL2Support: false});
+    return new BABYLON.Engine(canvas, true, {preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false});
 };
 
 var createScene = function() {
-    //This creates a basic Babylon Scene object (non-mesh)
+    //Create basic Babylon scene object
     var scene = new BABYLON.Scene(engine);
 
     //Create camera
     var camera = new BABYLON.ArcRotateCamera("camera", BABYLON.Tools.ToRadians(270), BABYLON.Tools.ToRadians(65), 10, BABYLON.Vector3.Zero(), scene);
 
-    //This attaches the camera to the canvas and makes interactable
+    //Attaches camera to canvas and makes interactable
     camera.attachControl(canvas, true);
-    camera.useBouncingBehavior = true;
     camera.useFramingBehavior = true;
 
-    //This creates a light, aiming 0,1,0 - to the sky (non-mesh)
+    //Creates light, aiming 0,1,0 to the sky
     var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
     
-    //Default intensity is 1. Let's dim the light a small amount
+    //Set light intensive (default 1)
     light.intensity = 0.7;
     //light.groundColor = new BABYLON.Color3.White(); //Remove shadows
 
@@ -46,40 +45,37 @@ var createScene = function() {
     skybox.material.specularColor = new BABYLON.Color3(0, 0, 0);
 
     //Creating objects
-    var earth = BABYLON.MeshBuilder.CreateSphere("earthMesh", {diameter: 1, segments: 32}, scene);
-    var jupiter = BABYLON.MeshBuilder.CreateSphere("jupiterMesh", {diameter: 1, segments: 32}, scene);
-    var sun = BABYLON.MeshBuilder.CreateSphere("sunMesh", {diameter: 1, segments: 32}, scene);
-
-    earth.renderingGroupId = 1;
-    jupiter.renderingGroupId = 1;
-    sun.renderingGroupId = 1;
-
-    earth.rotate(BABYLON.Axis.X, Math.PI, BABYLON.Space.LOCAL);
-    jupiter.rotate(BABYLON.Axis.X, Math.PI, BABYLON.Space.LOCAL);
-    sun.rotate(BABYLON.Axis.X, Math.PI, BABYLON.Space.LOCAL);
-
-    jupiter.scaling = new BABYLON.Vector3(planetsData.jupiter.size, planetsData.jupiter.size, planetsData.jupiter.size);
-    sun.scaling = new BABYLON.Vector3(planetsData.sun.size, planetsData.sun.size, planetsData.sun.size);
+    var rootSphere = BABYLON.MeshBuilder.CreateSphere("rootMesh", {diameter: 1, segments: 32}, scene);
+    rootSphere.isVisible = false;
+    rootSphere.renderingGroupId = 1;
 
     var divider = 10;
-    jupiter.position.x = (earth.scaling.x / 2) + divider + (jupiter.scaling.x / 2);
-    sun.position.x = jupiter.position.x + (jupiter.scaling.x / 2) + divider + (sun.scaling.x / 2);
-    
-    //Textures
-    earth.material = new BABYLON.StandardMaterial("earthMaterial", scene);
-    jupiter.material = new BABYLON.StandardMaterial("jupiterMaterial", scene);
-    sun.material = new BABYLON.StandardMaterial("sunMaterial", scene);
+    var planetMeshes = [];
+    for (var i = 0; i < planetsData.length; i++) {
+        var newClone = rootSphere.clone(planetsData[i][0]);
+        newClone.isVisible = true;
 
-    earth.material.diffuseTexture = new BABYLON.Texture(planetsData.earth.texture, scene);
-    jupiter.material.diffuseTexture = new BABYLON.Texture(planetsData.jupiter.texture, scene);
-    sun.material.diffuseTexture = new BABYLON.Texture(planetsData.sun.texture, scene);
+        newClone.rotate(BABYLON.Axis.X, Math.PI, BABYLON.Space.LOCAL);
+        newClone.scaling = new BABYLON.Vector3(planetsData[i][1], planetsData[i][1], planetsData[i][1]);
+
+        if (i === 0) {
+            newClone.position.x = 0;
+        } else {
+            newClone.position.x = scene.getMeshByName(planetsData[i][0]).position.x + (planetsData[i-1][1] / 2) + divider + (planetsData[i][1]);
+        }
+
+        newClone.material = new BABYLON.StandardMaterial(`${planetsData[i][0]}Material`, scene);
+        newClone.material.diffuseTexture = new BABYLON.Texture(planetsData[i][2], scene);
+
+        planetMeshes.push(newClone);
+    }
 
     //Set camera target
-    camera.setTarget(earth);
+    camera.setTarget(planetMeshes[0]);
 
     //GUI
     var gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
-    var btnBack = BABYLON.GUI.Button.CreateSimpleButton("button", "Back");
+    var btnBack = BABYLON.GUI.Button.CreateSimpleButton("buttonBack", "Back");
     btnBack.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
     btnBack.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
     btnBack.left = "25px";
@@ -89,7 +85,7 @@ var createScene = function() {
     btnBack.background = "black";
     btnBack.children[0].color = "white";
 
-    var btnNext = BABYLON.GUI.Button.CreateSimpleButton("button", "Next");
+    var btnNext = BABYLON.GUI.Button.CreateSimpleButton("buttonNext", "Next");
     btnNext.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
     btnNext.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
     btnNext.left = "150px";
@@ -99,15 +95,40 @@ var createScene = function() {
     btnNext.background = "black";
     btnNext.children[0].color = "white";
 
+    var btnRecentre = BABYLON.GUI.Button.CreateSimpleButton("buttonRecentre", "Recentre");
+    btnRecentre.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+    btnRecentre.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+    btnRecentre.left = "25px";
+    btnRecentre.top = "85px";
+    btnRecentre.width = "225px";
+    btnRecentre.height = "50px";
+    btnRecentre.background = "black";
+    btnRecentre.children[0].color = "white";
+
     gui.addControl(btnBack);
     gui.addControl(btnNext);
+    gui.addControl(btnRecentre);
 
     //Planet Navigation
+    var currentPlanet = 0;
     btnBack.onPointerClickObservable.add(function() {
-        camera.setTarget(earth);
+        if (currentPlanet <= 0) {
+            camera.setTarget(planetMeshes[currentPlanet]);
+        } else {
+            currentPlanet -= 1;
+            camera.setTarget(planetMeshes[currentPlanet]);
+        }
     });
     btnNext.onPointerClickObservable.add(function() {
-        camera.setTarget(sun);
+        if (currentPlanet >= (planetsData.length - 1)) {
+            camera.setTarget(planetMeshes[currentPlanet]);
+        } else {
+            currentPlanet += 1;
+            camera.setTarget(planetMeshes[currentPlanet]);
+        }
+    });
+    btnRecentre.onPointerClickObservable.add(function() {
+        camera.setTarget(planetMeshes[currentPlanet]);
     });
 
     return scene;
@@ -121,7 +142,7 @@ window.initFunction = async function() {
             console.log("the available createEngine function failed. Creating the default engine instead");
             return createDefaultEngine();
         }
-    }
+    };
 
     window.engine = await asyncEngineCreation();
     if (!engine) throw 'engine should not be null.';
@@ -129,10 +150,10 @@ window.initFunction = async function() {
     window.scene = createScene();
 };
 initFunction().then(() => {
-    sceneToRender = scene                    
+    sceneToRender = scene;
 });
 
-// Resize
+//Resize
 window.addEventListener("resize", function() {
     engine.resize();
 });
