@@ -46,12 +46,12 @@ var createScene = function() {
 
     //Creating objects
     var rootSphere = BABYLON.MeshBuilder.CreateSphere("rootMesh", {diameter: 1, segments: 32}, scene);
-    rootSphere.isVisible = false;
-    rootSphere.renderingGroupId = 1;
+    rootSphere.isVisible = false; //Hide root
+    rootSphere.renderingGroupId = 1; //Prevent clipping behind skybox
 
     var divider = 10;
     var planetMeshes = [];
-    for (var i = 0; i < planetsData.length; i++) {
+    for (var i = 0; i < planetsData.length; i++) { //Loop through planets.js and create meshes
         var newClone = rootSphere.clone(planetsData[i][0]);
         newClone.isVisible = true;
 
@@ -59,9 +59,9 @@ var createScene = function() {
         newClone.scaling = new BABYLON.Vector3(planetsData[i][1], planetsData[i][1], planetsData[i][1]);
 
         if (i === 0) {
-            newClone.position.x = 0;
+            newClone.position.x = 0; //Position first planet at centre
         } else {
-            newClone.position.x = scene.getMeshByName(planetsData[i][0]).position.x + (planetsData[i-1][1] / 2) + divider + (planetsData[i][1]);
+            newClone.position.x = scene.getMeshByName(planetsData[i-1][0]).position.x + (planetsData[i-1][1] / 2) + divider + (planetsData[i][1] / 2); //Get previous planets position and add half of the width of it to half the width of the new planet then add a divider width
         }
 
         newClone.material = new BABYLON.StandardMaterial(`${planetsData[i][0]}Material`, scene);
@@ -75,6 +75,9 @@ var createScene = function() {
 
     //GUI
     var gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+
+    //Add info GUI here
+
     var btnBack = BABYLON.GUI.Button.CreateSimpleButton("buttonBack", "Back");
     btnBack.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
     btnBack.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
