@@ -8,6 +8,12 @@ const planetsData = [
         "Info about the Earth"
     ],
     [
+        "Moon",
+        0.25,
+        "./images/2k_moon.jpg",
+        "Info about the Moon"
+    ],
+    [
         "Mars",
         0.5,
         "./images/2k_mars.jpg",
