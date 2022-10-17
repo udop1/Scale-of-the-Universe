@@ -137,11 +137,23 @@ var createScene = function() {
     infoText.color = "white";
     infoText.alpha = 1;
 
-    var btnHideInfo = BABYLON.GUI.Button.CreateSimpleButton("buttonHideInfo", "Hide");
+    var btnHideInfo = BABYLON.GUI.Button.CreateSimpleButton("buttonHideInfo", "Hide Info");
+    btnHideInfo.textWrapping = true;
     btnHideInfo.width = "50px";
     btnHideInfo.height = "250px";
     btnHideInfo.background = "black";
     btnHideInfo.children[0].color = "white";
+
+    var btnAudio = BABYLON.GUI.Button.CreateSimpleButton("buttonAudio", "Play Audio");
+    btnAudio.textWrapping = true;
+    btnAudio.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+    btnAudio.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+    btnAudio.left = "25px";
+    btnAudio.top = "-285px";
+    btnAudio.width = "50px";
+    btnAudio.height = "50px";
+    btnAudio.background = "black";
+    btnAudio.children[0].color = "white";
 
     function changeInfoText(text) { //Allows info text to change
         infoText.text = text;
@@ -151,6 +163,7 @@ var createScene = function() {
     gui.addControl(btnBack);
     gui.addControl(btnNext);
     gui.addControl(btnRecentre);
+    gui.addControl(btnAudio);
 
     gui.addControl(infoContainer);
     infoContainer.addControl(btnHideInfo);
@@ -187,20 +200,34 @@ var createScene = function() {
 
     infoPanel.animations = [infoPanelAnim];
 
-    var hideToggle = 0;
+    var hideToggle = false;
     btnHideInfo.onPointerClickObservable.add(function() {
-        if (hideToggle === 0) {
+        if (hideToggle === false) {
             scene.beginAnimation(infoPanel, 0, 100, false, 2, function() {
                 infoPanel.isVisible = false;
-                btnHideInfo.children[0].text = "Show";
-                hideToggle = 1;
+                btnHideInfo.children[0].text = "Show Info";
+                hideToggle = true;
             }); //target, from, to, loop, anim speed
         } else {
             infoPanel.isVisible = true;
             scene.beginAnimation(infoPanel, 100, 0, false, 2, function() {
-                btnHideInfo.children[0].text = "Hide";
-                hideToggle = 0;
+                btnHideInfo.children[0].text = "Hide Info";
+                hideToggle = false;
             });
+        }
+    });
+
+    //Audio
+    var audioRunning = false;
+    btnAudio.onPointerClickObservable.add(function() {
+        if (audioRunning === false) {
+            //Play audio here
+            btnAudio.children[0].text = "Stop Audio";
+            audioRunning = true;
+        } else {
+            //Stop audio here
+            btnAudio.children[0].text = "Play Audio";
+            audioRunning = false;
         }
     });
 
