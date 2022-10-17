@@ -33,6 +33,9 @@ var createScene = function() {
     light.intensity = 0.7;
     //light.groundColor = new BABYLON.Color3.White(); //Remove shadows
 
+    //Keep track of current planet
+    var currentPlanet = 0;
+
     //Skybox
     var skybox = BABYLON.MeshBuilder.CreateBox("skybox", {size: 1000}, scene);
     skybox.material = new BABYLON.StandardMaterial("skybox", scene);
@@ -49,7 +52,6 @@ var createScene = function() {
     rootSphere.isVisible = false; //Hide root
     rootSphere.renderingGroupId = 1; //Prevent clipping behind skybox
 
-    var divider = 10;
     var planetMeshes = [];
     for (var i = 0; i < planetsData.length; i++) { //Loop through planets.js and create meshes
         var newClone = rootSphere.clone(planetsData[i][0]);
@@ -61,24 +63,22 @@ var createScene = function() {
         if (i === 0) {
             newClone.position.x = 0; //Position first planet at centre
         } else {
-            newClone.position.x = scene.getMeshByName(planetsData[i-1][0]).position.x + (planetsData[i-1][1] / 2) + divider + (planetsData[i][1] / 2); //Get previous planets position and add half of the width of it to half the width of the new planet then add a divider width
+            newClone.position.x = scene.getMeshByName(planetsData[i-1][0]).position.x + (planetsData[i-1][1] / 2) + planetsData[i][2] + (planetsData[i][1] / 2); //Get previous planets position and add half of the width of it to half the width of the new planet then add a divider width
         }
 
         newClone.material = new BABYLON.StandardMaterial(`${planetsData[i][0]}Material`, scene);
-        newClone.material.diffuseTexture = new BABYLON.Texture(planetsData[i][2], scene);
+        newClone.material.diffuseTexture = new BABYLON.Texture(planetsData[i][3], scene);
 
         planetMeshes.push(newClone);
     }
 
     //Set camera target
-    camera.setTarget(planetMeshes[0]);
+    camera.setTarget(planetMeshes[currentPlanet]);
 
     //GUI
-    var gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+    var gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI"); //Create GUI element
 
-    //Add info GUI here
-
-    var btnBack = BABYLON.GUI.Button.CreateSimpleButton("buttonBack", "Back");
+    var btnBack = BABYLON.GUI.Button.CreateSimpleButton("buttonBack", "Back"); //Back button
     btnBack.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
     btnBack.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
     btnBack.left = "25px";
@@ -88,7 +88,7 @@ var createScene = function() {
     btnBack.background = "black";
     btnBack.children[0].color = "white";
 
-    var btnNext = BABYLON.GUI.Button.CreateSimpleButton("buttonNext", "Next");
+    var btnNext = BABYLON.GUI.Button.CreateSimpleButton("buttonNext", "Next"); //Next button
     btnNext.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
     btnNext.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
     btnNext.left = "150px";
@@ -98,7 +98,7 @@ var createScene = function() {
     btnNext.background = "black";
     btnNext.children[0].color = "white";
 
-    var btnRecentre = BABYLON.GUI.Button.CreateSimpleButton("buttonRecentre", "Recentre");
+    var btnRecentre = BABYLON.GUI.Button.CreateSimpleButton("buttonRecentre", "Recentre"); //Recentre button
     btnRecentre.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
     btnRecentre.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
     btnRecentre.left = "25px";
@@ -108,17 +108,48 @@ var createScene = function() {
     btnRecentre.background = "black";
     btnRecentre.children[0].color = "white";
 
+    var infoPanel = new BABYLON.GUI.ScrollViewer(); //Panel to hold info
+    infoPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+    infoPanel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+    infoPanel.left = "25px";
+    infoPanel.top = "-25px";
+    infoPanel.width = "95%";
+    infoPanel.height = "250px";
+    infoPanel.background = "black";
+    
+    var infoText = new BABYLON.GUI.TextBlock("infoText", planetsData[currentPlanet][4]); //Info text
+    infoText.textWrapping = BABYLON.GUI.TextWrapping.WordWrap;
+    infoText.resizeToFit = true;
+    infoText.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+    infoText.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+    infoText.textHorizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+    infoText.textVerticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_TOP;
+    infoText.paddingTop = "5%";
+    infoText.paddingLeft = "30px";
+    infoText.paddingRight = "20px";
+    infoText.paddingBottom = "5%";
+    infoText.color = "white";
+    infoText.alpha = 1;
+
+    function changeInfoText(text) { //Allows info text to change
+        infoText.text = text;
+    };
+
+    //Add control elements to main GUI
     gui.addControl(btnBack);
     gui.addControl(btnNext);
     gui.addControl(btnRecentre);
 
+    gui.addControl(infoPanel);
+    infoPanel.addControl(infoText);
+
     //Planet Navigation
-    var currentPlanet = 0;
     btnBack.onPointerClickObservable.add(function() {
         if (currentPlanet <= 0) {
             camera.setTarget(planetMeshes[currentPlanet]);
         } else {
             currentPlanet -= 1;
+            changeInfoText(planetsData[currentPlanet][4]);
             camera.setTarget(planetMeshes[currentPlanet]);
         }
     });
@@ -127,12 +158,14 @@ var createScene = function() {
             camera.setTarget(planetMeshes[currentPlanet]);
         } else {
             currentPlanet += 1;
+            changeInfoText(planetsData[currentPlanet][4]);
             camera.setTarget(planetMeshes[currentPlanet]);
         }
     });
     btnRecentre.onPointerClickObservable.add(function() {
         camera.setTarget(planetMeshes[currentPlanet]);
     });
+
 
     return scene;
 };
