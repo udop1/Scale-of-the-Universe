@@ -108,13 +108,19 @@ var createScene = function() {
     btnRecentre.background = "black";
     btnRecentre.children[0].color = "white";
 
+    var infoContainer = new BABYLON.GUI.StackPanel();
+    infoContainer.isVertical = false;
+    infoContainer.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+    infoContainer.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+    infoContainer.left = "25px";
+    infoContainer.top = "-25px";
+    infoContainer.width = "95%";
+    infoContainer.height = "250px";
+
     var infoPanel = new BABYLON.GUI.ScrollViewer(); //Panel to hold info
-    infoPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-    infoPanel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
-    infoPanel.left = "25px";
-    infoPanel.top = "-25px";
-    infoPanel.width = "95%";
+    infoPanel.width = "500px";
     infoPanel.height = "250px";
+    infoPanel.paddingLeft = "10px";
     infoPanel.background = "black";
     
     var infoText = new BABYLON.GUI.TextBlock("infoText", planetsData[currentPlanet][4]); //Info text
@@ -131,6 +137,12 @@ var createScene = function() {
     infoText.color = "white";
     infoText.alpha = 1;
 
+    var btnHideInfo = BABYLON.GUI.Button.CreateSimpleButton("buttonHideInfo", "Hide");
+    btnHideInfo.width = "50px";
+    btnHideInfo.height = "250px";
+    btnHideInfo.background = "black";
+    btnHideInfo.children[0].color = "white";
+
     function changeInfoText(text) { //Allows info text to change
         infoText.text = text;
     };
@@ -140,7 +152,9 @@ var createScene = function() {
     gui.addControl(btnNext);
     gui.addControl(btnRecentre);
 
-    gui.addControl(infoPanel);
+    gui.addControl(infoContainer);
+    infoContainer.addControl(btnHideInfo);
+    infoContainer.addControl(infoPanel);
     infoPanel.addControl(infoText);
 
     //Planet Navigation
@@ -164,6 +178,32 @@ var createScene = function() {
     });
     btnRecentre.onPointerClickObservable.add(function() {
         camera.setTarget(planetMeshes[currentPlanet]);
+    });
+
+    //Info Box Animation
+    var infoPanelCloseAnim = new BABYLON.Animation("infoPanelAnimation", "widthInPixels", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+    var infoPanelCloseAnimKeys = [{frame: 0, value: 500}, {frame: 100, value: 25}];
+    infoPanelCloseAnim.setKeys(infoPanelCloseAnimKeys);
+
+    //var infoPanelOpenAnim = new BABYLON.Animation
+
+    infoPanel.animations = [infoPanelCloseAnim];
+
+    var hideToggle = 0;
+    btnHideInfo.onPointerClickObservable.add(function() {
+        if (hideToggle === 0) {
+            scene.beginAnimation(infoPanel, 0, 100, false, 2, function() {
+                infoPanel.isVisible = false;
+                btnHideInfo.children[0].text = "Show";
+                hideToggle = 1;
+            }); //target, from, to, loop, anim speed
+        } else {
+            infoPanel.isVisible = true;
+            scene.beginAnimation(infoPanel, 100, 0, false, 2, function() {
+                btnHideInfo.children[0].text = "Hide";
+                hideToggle = 0;
+            });
+        }
     });
 
 

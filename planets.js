@@ -1,6 +1,6 @@
 //https://www.solarsystemscope.com/spacepedia/handbook/
 //https://www.solarsystemscope.com/textures/
-const planetsData = [ //Name, Scale, Distance Divider, Texture, Info Texxt
+const planetsData = [ //Name, Scale, Distance Divider, Texture, Info Text
     [
         "Earth",
         1,
