@@ -181,13 +181,11 @@ var createScene = function() {
     });
 
     //Info Box Animation
-    var infoPanelCloseAnim = new BABYLON.Animation("infoPanelAnimation", "widthInPixels", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
-    var infoPanelCloseAnimKeys = [{frame: 0, value: 500}, {frame: 100, value: 25}];
-    infoPanelCloseAnim.setKeys(infoPanelCloseAnimKeys);
+    var infoPanelAnim = new BABYLON.Animation("infoPanelAnimation", "widthInPixels", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
+    var infoPanelAnimKeys = [{frame: 0, value: 500}, {frame: 100, value: 25}];
+    infoPanelAnim.setKeys(infoPanelAnimKeys);
 
-    //var infoPanelOpenAnim = new BABYLON.Animation
-
-    infoPanel.animations = [infoPanelCloseAnim];
+    infoPanel.animations = [infoPanelAnim];
 
     var hideToggle = 0;
     btnHideInfo.onPointerClickObservable.add(function() {
