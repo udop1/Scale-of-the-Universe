@@ -143,6 +143,7 @@ var createScene = function() {
     btnHideInfo.height = "250px";
     btnHideInfo.background = "black";
     btnHideInfo.children[0].color = "white";
+    btnHideInfo.disabledColor = "black";
 
     var btnAudio = BABYLON.GUI.Button.CreateSimpleButton("buttonAudio", "Play Audio");
     btnAudio.textWrapping = true;
@@ -193,6 +194,14 @@ var createScene = function() {
         camera.setTarget(planetMeshes[currentPlanet]);
     });
 
+    //Prevent scrolling info box to control scene
+    infoPanel.onPointerEnterObservable.add(function() {
+        camera.detachControl();
+    });
+    infoPanel.onPointerOutObservable.add(function() {
+        camera.attachControl(canvas, true);
+    });
+
     //Info Box Animation
     var infoPanelAnim = new BABYLON.Animation("infoPanelAnimation", "widthInPixels", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
     var infoPanelAnimKeys = [{frame: 0, value: 500}, {frame: 100, value: 25}];
@@ -203,16 +212,20 @@ var createScene = function() {
     var hideToggle = false;
     btnHideInfo.onPointerClickObservable.add(function() {
         if (hideToggle === false) {
+            btnHideInfo.isEnabled = false;
             scene.beginAnimation(infoPanel, 0, 100, false, 2, function() {
                 infoPanel.isVisible = false;
                 btnHideInfo.children[0].text = "Show Info";
                 hideToggle = true;
+                btnHideInfo.isEnabled = true;
             }); //target, from, to, loop, anim speed
         } else {
+            btnHideInfo.isEnabled = false;
             infoPanel.isVisible = true;
             scene.beginAnimation(infoPanel, 100, 0, false, 2, function() {
                 btnHideInfo.children[0].text = "Hide Info";
                 hideToggle = false;
+                btnHideInfo.isEnabled = true;
             });
         }
     });
