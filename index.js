@@ -233,7 +233,7 @@ var createScene = function() {
         }
     });
 
-    //Audio
+    //Audio //https://doc.babylonjs.com/features/featuresDeepDive/audio/playingSoundsMusic
     /*var solBGM = new BABYLON.Sound("solSystemBGM", "music.wav/music.mp3", scene, null, {loop: true, autoplay: true, spatialSound: true, distanceModel: "linear", maxDistance: 100, });
     solBGM.setPosition();*/
 
