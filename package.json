@@ -1,24 +1,23 @@
 {
-  "dependencies": {
-    "babylonjs": "^5.29.0",
-    "babylonjs-gui": "^5.29.0"
-  },
   "name": "scale-of-the-universe",
-  "description": "Creating a visualisation of the scale of the universe for my University module.",
   "version": "1.0.0",
+  "description": "Creating a visualisation of the scale of the universe for my University module.",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/udop1/Scale-of-the-Universe.git"
+    "url": "git+https://github.com/udop1/scale-of-the-universe.git"
   },
   "author": "udop1",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/udop1/Scale-of-the-Universe/issues"
+    "url": "https://github.com/udop1/scale-of-the-universe/issues"
   },
-  "homepage": "https://github.com/udop1/Scale-of-the-Universe#readme"
+  "homepage": "https://github.com/udop1/scale-of-the-universe#readme",
+  "dependencies": {
+    "babylonjs": "^5.29.0",
+    "babylonjs-gui": "^5.29.0"
+  }
 }

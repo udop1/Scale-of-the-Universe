@@ -1,4 +1,4 @@
-// <reference path="modules/babylon.js" /> // Add three to make work
+// <reference path="modules/babylon.js" /> // Add three slashes to make work
 // <reference path="modules/babylon.gui.min.js" />
 
 var canvas = document.getElementById("renderCanvas");
