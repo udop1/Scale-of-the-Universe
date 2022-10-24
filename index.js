@@ -1,3 +1,6 @@
+// <reference path="modules/babylon.js" /> // Add three to make work
+// <reference path="modules/babylon.gui.min.js" />
+
 var canvas = document.getElementById("renderCanvas");
 
 var startRenderLoop = function(engine, canvas) {
@@ -198,7 +201,7 @@ var createScene = function() {
     infoPanel.onPointerEnterObservable.add(function() {
         camera.detachControl();
     });
-    infoPanel.onPointerOutObservable.add(function() {
+    infoPanel.onPointerOutObservable.add(function() { //Sometimes doesn't detect that you've left the area and doesn't reattach control
         camera.attachControl(canvas, true);
     });
 
@@ -231,6 +234,9 @@ var createScene = function() {
     });
 
     //Audio
+    /*var solBGM = new BABYLON.Sound("solSystemBGM", "music.wav/music.mp3", scene, null, {loop: true, autoplay: true, spatialSound: true, distanceModel: "linear", maxDistance: 100, });
+    solBGM.setPosition();*/
+
     var audioRunning = false;
     btnAudio.onPointerClickObservable.add(function() {
         if (audioRunning === false) {
