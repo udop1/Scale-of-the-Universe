@@ -76,7 +76,9 @@ var createScene = function() {
     }
 
     //Set camera target
-    camera.setTarget(planetMeshes[currentPlanet]);
+    var cameraAnimTarget = new BABYLON.TransformNode("rootCamAnimTarget");
+    camera.lockedTarget = cameraAnimTarget;
+    //camera.setTarget(planetMeshes[currentPlanet]);
 
     //GUI
     var gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI"); //Create GUI element
@@ -174,27 +176,45 @@ var createScene = function() {
     infoContainer.addControl(infoPanel);
     infoPanel.addControl(infoText);
 
-    //Planet Navigation //https://www.babylonjs-playground.com/#7B4S6A#3
+    //Planet Navigation //Zooming camera doesn't put the entire planet into view. If it doesn't work, try using setTarget after animation finish and try to fix animation not working after first animation.
     btnBack.onPointerClickObservable.add(function() {
         if (currentPlanet <= 0) {
-            camera.setTarget(planetMeshes[currentPlanet]);
+            //Zoom camera
+            BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, planetMeshes[currentPlanet].scaling.x, 0, new BABYLON.CubicEase);
+            console.log(planetMeshes[currentPlanet].scaling.x);
         } else {
             currentPlanet -= 1;
             changeInfoText(planetsData[currentPlanet][4]);
-            camera.setTarget(planetMeshes[currentPlanet]);
+
+            //Move camera
+            camera.lockedTarget = cameraAnimTarget;
+            BABYLON.Animation.CreateAndStartAnimation("moveCameraNextAnim", cameraAnimTarget, "position", 30, 100, cameraAnimTarget.position, new BABYLON.Vector3(planetMeshes[currentPlanet].position.x), 0, new BABYLON.CubicEase);
+            //Zoom camera
+            BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, planetMeshes[currentPlanet].scaling.x, 0, new BABYLON.CubicEase);
+            console.log(planetMeshes[currentPlanet].scaling.x);
         }
     });
     btnNext.onPointerClickObservable.add(function() {
         if (currentPlanet >= (planetsData.length - 1)) {
-            camera.setTarget(planetMeshes[currentPlanet]);
+            //Zoom camera
+            BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, planetMeshes[currentPlanet].scaling.x, 0, new BABYLON.CubicEase);
+            console.log(planetMeshes[currentPlanet].scaling.x);
         } else {
             currentPlanet += 1;
             changeInfoText(planetsData[currentPlanet][4]);
-            camera.setTarget(planetMeshes[currentPlanet]);
+
+            //Move camera
+            camera.lockedTarget = cameraAnimTarget;
+            BABYLON.Animation.CreateAndStartAnimation("moveCameraNextAnim", cameraAnimTarget, "position", 30, 100, cameraAnimTarget.position, new BABYLON.Vector3(planetMeshes[currentPlanet].position.x), 0, new BABYLON.CubicEase);
+            //Zoom camera
+            BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, planetMeshes[currentPlanet].scaling.x, 0, new BABYLON.CubicEase);
+            console.log(planetMeshes[currentPlanet].scaling.x);
         }
     });
     btnRecentre.onPointerClickObservable.add(function() {
-        camera.setTarget(planetMeshes[currentPlanet]);
+        //Zoom camera
+        BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, planetMeshes[currentPlanet].scaling.x, 0, new BABYLON.CubicEase);
+        console.log(planetMeshes[currentPlanet].scaling.x);
     });
 
     //Prevent scrolling info box to control scene
@@ -234,8 +254,8 @@ var createScene = function() {
     });
 
     //Audio //https://doc.babylonjs.com/features/featuresDeepDive/audio/playingSoundsMusic
-    var solBGM = new BABYLON.Sound("solSystemBGM", "./sound/Dreamy Flashback.mp3", scene, null, {loop: true, autoplay: true, spatialSound: true, distanceModel: "linear", maxDistance: 100});
-    solBGM.setPosition(new BABYLON.Vector3(planetMeshes[0].position.x, 0, 0));
+    /*var solBGM = new BABYLON.Sound("solSystemBGM", "./sound/Dreamy Flashback.mp3", scene, null, {loop: true, autoplay: true, spatialSound: true, distanceModel: "linear", maxDistance: 100});
+    solBGM.setPosition(new BABYLON.Vector3(planetMeshes[0].position.x, 0, 0));*/
 
     var audioRunning = false;
     btnAudio.onPointerClickObservable.add(function() {
