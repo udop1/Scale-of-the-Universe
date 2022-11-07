@@ -1,5 +1,12 @@
 // <reference path="modules/babylon.js" /> // Add three slashes to make work
 // <reference path="modules/babylon.gui.min.js" />
+// <reference path="modules/babylon.inspector.bundle.js" />
+// <reference path="modules/babylonjs.loaders.min.js" />
+// <reference path="modules/babylonjs.materials.min.js" />
+// <reference path="modules/babylonjs.postProcess.min.js" />
+// <reference path="modules/babylonjs.proceduralTextures.min.js" />
+// <reference path="modules/babylonjs.serializers.min.js" />
+// <reference path="modules/babylon.viewer.js" />
 
 var canvas = document.getElementById("renderCanvas");
 
@@ -181,7 +188,6 @@ var createScene = function() {
         if (currentPlanet <= 0) {
             //Zoom camera
             BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, planetMeshes[currentPlanet].scaling.x, 0, new BABYLON.CubicEase);
-            console.log(planetMeshes[currentPlanet].scaling.x);
         } else {
             currentPlanet -= 1;
             changeInfoText(planetsData[currentPlanet][4]);
@@ -189,16 +195,21 @@ var createScene = function() {
             //Move camera
             camera.lockedTarget = cameraAnimTarget;
             BABYLON.Animation.CreateAndStartAnimation("moveCameraNextAnim", cameraAnimTarget, "position", 30, 100, cameraAnimTarget.position, new BABYLON.Vector3(planetMeshes[currentPlanet].position.x), 0, new BABYLON.CubicEase);
-            //Zoom camera
-            BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, planetMeshes[currentPlanet].scaling.x, 0, new BABYLON.CubicEase);
-            console.log(planetMeshes[currentPlanet].scaling.x);
+            //Zoom camera //https://forum.babylonjs.com/t/fit-camera-to-boundingbox/4865/4
+            //BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, planetMeshes[currentPlanet].scaling.x, 0, new BABYLON.CubicEase);
+
+            var mesh_sphere = planetMeshes[currentPlanet].getBoundingInfo().boundingSphere.radiusWorld;
+            console.log(mesh_sphere);
+
+            var distance = (mesh_sphere/2) + mesh_sphere;
+
+            BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, distance, 0, new BABYLON.CubicEase);
         }
     });
     btnNext.onPointerClickObservable.add(function() {
         if (currentPlanet >= (planetsData.length - 1)) {
             //Zoom camera
             BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, planetMeshes[currentPlanet].scaling.x, 0, new BABYLON.CubicEase);
-            console.log(planetMeshes[currentPlanet].scaling.x);
         } else {
             currentPlanet += 1;
             changeInfoText(planetsData[currentPlanet][4]);
@@ -208,13 +219,11 @@ var createScene = function() {
             BABYLON.Animation.CreateAndStartAnimation("moveCameraNextAnim", cameraAnimTarget, "position", 30, 100, cameraAnimTarget.position, new BABYLON.Vector3(planetMeshes[currentPlanet].position.x), 0, new BABYLON.CubicEase);
             //Zoom camera
             BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, planetMeshes[currentPlanet].scaling.x, 0, new BABYLON.CubicEase);
-            console.log(planetMeshes[currentPlanet].scaling.x);
         }
     });
     btnRecentre.onPointerClickObservable.add(function() {
         //Zoom camera
         BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, planetMeshes[currentPlanet].scaling.x, 0, new BABYLON.CubicEase);
-        console.log(planetMeshes[currentPlanet].scaling.x);
     });
 
     //Prevent scrolling info box to control scene
