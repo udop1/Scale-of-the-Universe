@@ -287,11 +287,11 @@ var createScene = function() {
             });
         }
     });
-    
+
 
     //Audio //https://doc.babylonjs.com/features/featuresDeepDive/audio/playingSoundsMusic
-    /*var solBGM = new BABYLON.Sound("solSystemBGM", "./sound/Dreamy Flashback.mp3", scene, null, {loop: true, autoplay: true, spatialSound: true, distanceModel: "linear", maxDistance: 100});
-    solBGM.setPosition(new BABYLON.Vector3(planetMeshes[0].position.x, 0, 0));*/
+    /*var solBGM = new BABYLON.Sound("solSystemBGM", "./sound/Dreamy Flashback.mp3", scene, null, {loop: true, autoplay: true, spatialSound: true, distanceModel: "linear", maxDistance: 100, panningModel: "HRTF"});
+    solBGM.attachToMesh(planetMeshes[4]);*/
 
     var audioRunning = false;
     btnAudio.onPointerClickObservable.add(function() {
