@@ -1,12 +1,13 @@
-// <reference path="modules/babylon.js" /> // Add three slashes to make work
-// <reference path="modules/babylon.gui.min.js" />
-// <reference path="modules/babylon.inspector.bundle.js" />
-// <reference path="modules/babylonjs.loaders.min.js" />
-// <reference path="modules/babylonjs.materials.min.js" />
-// <reference path="modules/babylonjs.postProcess.min.js" />
-// <reference path="modules/babylonjs.proceduralTextures.min.js" />
-// <reference path="modules/babylonjs.serializers.min.js" />
-// <reference path="modules/babylon.viewer.js" />
+// Add three slashes to make work
+/// <reference path="modules/babylon.js" />
+/// <reference path="modules/babylon.gui.min.js" />
+/// <reference path="modules/babylon.inspector.bundle.js" />
+/// <reference path="modules/babylonjs.loaders.min.js" />
+/// <reference path="modules/babylonjs.materials.min.js" />
+/// <reference path="modules/babylonjs.postProcess.min.js" />
+/// <reference path="modules/babylonjs.proceduralTextures.min.js" />
+/// <reference path="modules/babylonjs.serializers.min.js" />
+/// <reference path="modules/babylon.viewer.js" />
 
 var canvas = document.getElementById("renderCanvas");
 
@@ -183,11 +184,13 @@ var createScene = function() {
     infoContainer.addControl(infoPanel);
     infoPanel.addControl(infoText);
 
-    //Planet Navigation //Zooming camera doesn't put the entire planet into view. If it doesn't work, try using setTarget after animation finish and try to fix animation not working after first animation.
+    //Planet Navigation
     btnBack.onPointerClickObservable.add(function() {
         if (currentPlanet <= 0) {
-            //Zoom camera
-            BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, planetMeshes[currentPlanet].scaling.x, 0, new BABYLON.CubicEase);
+            //Zoom camera //https://forum.babylonjs.com/t/fit-camera-to-boundingbox/4865/4
+            var distance = calcCameraToBoundingDistance(planetMeshes[currentPlanet]);
+
+            BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, distance, 0, new BABYLON.CubicEase);
         } else {
             currentPlanet -= 1;
             changeInfoText(planetsData[currentPlanet][4]);
@@ -195,21 +198,19 @@ var createScene = function() {
             //Move camera
             camera.lockedTarget = cameraAnimTarget;
             BABYLON.Animation.CreateAndStartAnimation("moveCameraNextAnim", cameraAnimTarget, "position", 30, 100, cameraAnimTarget.position, new BABYLON.Vector3(planetMeshes[currentPlanet].position.x), 0, new BABYLON.CubicEase);
+
             //Zoom camera //https://forum.babylonjs.com/t/fit-camera-to-boundingbox/4865/4
-            //BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, planetMeshes[currentPlanet].scaling.x, 0, new BABYLON.CubicEase);
-
-            var mesh_sphere = planetMeshes[currentPlanet].getBoundingInfo().boundingSphere.radiusWorld;
-            console.log(mesh_sphere);
-
-            var distance = (mesh_sphere/2) + mesh_sphere;
+            var distance = calcCameraToBoundingDistance(planetMeshes[currentPlanet]);
 
             BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, distance, 0, new BABYLON.CubicEase);
         }
     });
     btnNext.onPointerClickObservable.add(function() {
         if (currentPlanet >= (planetsData.length - 1)) {
-            //Zoom camera
-            BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, planetMeshes[currentPlanet].scaling.x, 0, new BABYLON.CubicEase);
+            //Zoom camera //https://forum.babylonjs.com/t/fit-camera-to-boundingbox/4865/4
+            var distance = calcCameraToBoundingDistance(planetMeshes[currentPlanet]);
+
+            BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, distance, 0, new BABYLON.CubicEase);
         } else {
             currentPlanet += 1;
             changeInfoText(planetsData[currentPlanet][4]);
@@ -217,14 +218,30 @@ var createScene = function() {
             //Move camera
             camera.lockedTarget = cameraAnimTarget;
             BABYLON.Animation.CreateAndStartAnimation("moveCameraNextAnim", cameraAnimTarget, "position", 30, 100, cameraAnimTarget.position, new BABYLON.Vector3(planetMeshes[currentPlanet].position.x), 0, new BABYLON.CubicEase);
-            //Zoom camera
-            BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, planetMeshes[currentPlanet].scaling.x, 0, new BABYLON.CubicEase);
+
+            //Zoom camera //https://forum.babylonjs.com/t/fit-camera-to-boundingbox/4865/4
+            var distance = calcCameraToBoundingDistance(planetMeshes[currentPlanet]);
+
+            BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, distance, 0, new BABYLON.CubicEase);
         }
     });
     btnRecentre.onPointerClickObservable.add(function() {
-        //Zoom camera
-        BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, planetMeshes[currentPlanet].scaling.x, 0, new BABYLON.CubicEase);
+        //Zoom camera //https://forum.babylonjs.com/t/fit-camera-to-boundingbox/4865/4
+        var distance = calcCameraToBoundingDistance(planetMeshes[currentPlanet]);
+
+        BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, distance, 0, new BABYLON.CubicEase);
     });
+
+    function calcCameraToBoundingDistance(planet) { //Ensure that the camera's frustum planes always touch the bounding sphere
+        var meshRadius = planet.getBoundingInfo().boundingSphere.radius;
+        var meshRadiusWorld = planet.getBoundingInfo().boundingSphere.radiusWorld;
+        var meshRadiusMax = Math.max(meshRadius, meshRadiusWorld); //Get highest radius so that any planet size always fits
+
+        var halfCameraFOV = (camera.fov/2); //In radians
+
+        return meshRadiusMax/Math.sin(halfCameraFOV);
+    };
+
 
     //Prevent scrolling info box to control scene
     infoPanel.onPointerEnterObservable.add(function() {
