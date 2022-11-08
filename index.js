@@ -47,6 +47,7 @@ var createScene = function() {
     //Keep track of current planet
     var currentPlanet = 0;
 
+
     //Skybox
     var skybox = BABYLON.MeshBuilder.CreateBox("skybox", {size: 1000}, scene);
     skybox.material = new BABYLON.StandardMaterial("skybox", scene);
@@ -57,6 +58,7 @@ var createScene = function() {
     skybox.material.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
     skybox.material.diffuseColor = new BABYLON.Color3(0, 0, 0);
     skybox.material.specularColor = new BABYLON.Color3(0, 0, 0);
+
 
     //Creating objects
     var rootSphere = BABYLON.MeshBuilder.CreateSphere("rootMesh", {diameter: 1, segments: 32}, scene);
@@ -83,10 +85,15 @@ var createScene = function() {
         planetMeshes.push(newClone);
     }
 
+
     //Set camera target
     var cameraAnimTarget = new BABYLON.TransformNode("rootCamAnimTarget");
     camera.lockedTarget = cameraAnimTarget;
-    //camera.setTarget(planetMeshes[currentPlanet]);
+    //Zoom into camera target //https://forum.babylonjs.com/t/fit-camera-to-boundingbox/4865/4
+    var distance = calcCameraToBoundingDistance(planetMeshes[currentPlanet]);
+
+    BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, distance, 0, new BABYLON.CubicEase);
+
 
     //GUI
     var gui = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI"); //Create GUI element
@@ -184,6 +191,7 @@ var createScene = function() {
     infoContainer.addControl(infoPanel);
     infoPanel.addControl(infoText);
 
+
     //Planet Navigation
     btnBack.onPointerClickObservable.add(function() {
         if (currentPlanet <= 0) {
@@ -251,6 +259,7 @@ var createScene = function() {
         camera.attachControl(canvas, true);
     });
 
+
     //Info Box Animation
     var infoPanelAnim = new BABYLON.Animation("infoPanelAnimation", "widthInPixels", 30, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE);
     var infoPanelAnimKeys = [{frame: 0, value: 500}, {frame: 100, value: 25}];
@@ -278,6 +287,7 @@ var createScene = function() {
             });
         }
     });
+    
 
     //Audio //https://doc.babylonjs.com/features/featuresDeepDive/audio/playingSoundsMusic
     /*var solBGM = new BABYLON.Sound("solSystemBGM", "./sound/Dreamy Flashback.mp3", scene, null, {loop: true, autoplay: true, spatialSound: true, distanceModel: "linear", maxDistance: 100});
