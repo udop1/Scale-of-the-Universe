@@ -89,7 +89,7 @@ var createScene = function() {
     //Set camera target
     var cameraAnimTarget = new BABYLON.TransformNode("rootCamAnimTarget");
     camera.lockedTarget = cameraAnimTarget;
-    //Zoom into camera target //https://forum.babylonjs.com/t/fit-camera-to-boundingbox/4865/4
+    //Zoom into camera target //https://stackoverflow.com/a/64571830
     var distance = calcCameraToBoundingDistance(planetMeshes[currentPlanet]);
 
     BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, distance, 0, new BABYLON.CubicEase);
@@ -195,7 +195,7 @@ var createScene = function() {
     //Planet Navigation
     btnBack.onPointerClickObservable.add(function() {
         if (currentPlanet <= 0) {
-            //Zoom camera //https://forum.babylonjs.com/t/fit-camera-to-boundingbox/4865/4
+            //Zoom camera //https://stackoverflow.com/a/64571830
             var distance = calcCameraToBoundingDistance(planetMeshes[currentPlanet]);
 
             BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, distance, 0, new BABYLON.CubicEase);
@@ -207,7 +207,7 @@ var createScene = function() {
             camera.lockedTarget = cameraAnimTarget;
             BABYLON.Animation.CreateAndStartAnimation("moveCameraNextAnim", cameraAnimTarget, "position", 30, 100, cameraAnimTarget.position, new BABYLON.Vector3(planetMeshes[currentPlanet].position.x), 0, new BABYLON.CubicEase);
 
-            //Zoom camera //https://forum.babylonjs.com/t/fit-camera-to-boundingbox/4865/4
+            //Zoom camera //https://stackoverflow.com/a/64571830
             var distance = calcCameraToBoundingDistance(planetMeshes[currentPlanet]);
 
             BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, distance, 0, new BABYLON.CubicEase);
@@ -215,7 +215,7 @@ var createScene = function() {
     });
     btnNext.onPointerClickObservable.add(function() {
         if (currentPlanet >= (planetsData.length - 1)) {
-            //Zoom camera //https://forum.babylonjs.com/t/fit-camera-to-boundingbox/4865/4
+            //Zoom camera //https://stackoverflow.com/a/64571830
             var distance = calcCameraToBoundingDistance(planetMeshes[currentPlanet]);
 
             BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, distance, 0, new BABYLON.CubicEase);
@@ -227,14 +227,14 @@ var createScene = function() {
             camera.lockedTarget = cameraAnimTarget;
             BABYLON.Animation.CreateAndStartAnimation("moveCameraNextAnim", cameraAnimTarget, "position", 30, 100, cameraAnimTarget.position, new BABYLON.Vector3(planetMeshes[currentPlanet].position.x), 0, new BABYLON.CubicEase);
 
-            //Zoom camera //https://forum.babylonjs.com/t/fit-camera-to-boundingbox/4865/4
+            //Zoom camera //https://stackoverflow.com/a/64571830
             var distance = calcCameraToBoundingDistance(planetMeshes[currentPlanet]);
 
             BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, distance, 0, new BABYLON.CubicEase);
         }
     });
     btnRecentre.onPointerClickObservable.add(function() {
-        //Zoom camera //https://forum.babylonjs.com/t/fit-camera-to-boundingbox/4865/4
+        //Zoom camera //https://stackoverflow.com/a/64571830
         var distance = calcCameraToBoundingDistance(planetMeshes[currentPlanet]);
 
         BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, distance, 0, new BABYLON.CubicEase);
