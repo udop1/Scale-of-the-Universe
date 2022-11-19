@@ -71,16 +71,22 @@ var createScene = function() {
         newClone.isVisible = true;
 
         newClone.rotate(BABYLON.Axis.X, Math.PI, BABYLON.Space.LOCAL);
-        newClone.scaling = new BABYLON.Vector3(planetsData[i][1], planetsData[i][1], planetsData[i][1]);
+        newClone.scaling = new BABYLON.Vector3(planetsData[i][2], planetsData[i][2], planetsData[i][2]);
 
         if (i === 0) {
             newClone.position.x = 0; //Position first planet at centre
         } else {
-            newClone.position.x = scene.getMeshByName(planetsData[i-1][0]).position.x + (planetsData[i-1][1] / 2) + planetsData[i][2] + (planetsData[i][1] / 2); //Get previous planets position and add half of the width of it to half the width of the new planet then add a divider width
+            newClone.position.x = scene.getMeshByName(planetsData[i-1][0]).position.x + (planetsData[i-1][2] / 2) + planetsData[i][3] + (planetsData[i][2] / 2); //Get previous planets position and add half of the width of it to half the width of the new planet then add a divider width
         }
 
         newClone.material = new BABYLON.StandardMaterial(`${planetsData[i][0]}Material`, scene);
-        newClone.material.diffuseTexture = new BABYLON.Texture(planetsData[i][3], scene);
+        newClone.material.diffuseTexture = new BABYLON.Texture(planetsData[i][4], scene);
+
+        if (planetsData[i][1] === "star") {
+            var gl = new BABYLON.GlowLayer("glow", scene);
+            //gl.intensity = 2;
+            gl.referenceMeshToUseItsOwnMaterial(newClone);
+        }
 
         planetMeshes.push(newClone);
     }
@@ -143,7 +149,7 @@ var createScene = function() {
     infoPanel.paddingLeft = "10px";
     infoPanel.background = "black";
     
-    var infoText = new BABYLON.GUI.TextBlock("infoText", planetsData[currentPlanet][4]); //Info text
+    var infoText = new BABYLON.GUI.TextBlock("infoText", planetsData[currentPlanet][5]); //Info text
     infoText.textWrapping = BABYLON.GUI.TextWrapping.WordWrap;
     infoText.resizeToFit = true;
     infoText.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
@@ -165,7 +171,7 @@ var createScene = function() {
     btnHideInfo.children[0].color = "white";
     btnHideInfo.disabledColor = "black";
 
-    var btnAudio = BABYLON.GUI.Button.CreateSimpleButton("buttonAudio", "Play Audio");
+    var btnAudio = BABYLON.GUI.Button.CreateSimpleButton("buttonAudio", "Stop Audio");
     btnAudio.textWrapping = true;
     btnAudio.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
     btnAudio.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
@@ -201,7 +207,7 @@ var createScene = function() {
             BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, distance, 0, new BABYLON.CubicEase);
         } else {
             currentPlanet -= 1;
-            changeInfoText(planetsData[currentPlanet][4]);
+            changeInfoText(planetsData[currentPlanet][5]);
 
             //Move camera
             camera.lockedTarget = cameraAnimTarget;
@@ -221,7 +227,7 @@ var createScene = function() {
             BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, distance, 0, new BABYLON.CubicEase);
         } else {
             currentPlanet += 1;
-            changeInfoText(planetsData[currentPlanet][4]);
+            changeInfoText(planetsData[currentPlanet][5]);
 
             //Move camera
             camera.lockedTarget = cameraAnimTarget;
@@ -290,17 +296,17 @@ var createScene = function() {
 
 
     //Audio //https://doc.babylonjs.com/features/featuresDeepDive/audio/playingSoundsMusic
-    /*var solBGM = new BABYLON.Sound("solSystemBGM", "./sound/Dreamy Flashback.mp3", scene, null, {loop: true, autoplay: true, spatialSound: true, distanceModel: "linear", maxDistance: 100, panningModel: "HRTF"});
-    solBGM.attachToMesh(planetMeshes[4]);*/
+    var solBGM = new BABYLON.Sound("solSystemBGM", "./sound/Dreamy Flashback.mp3", scene, null, {loop: true, autoplay: true, spatialSound: true, distanceModel: "linear", maxDistance: 100, panningModel: "HRTF"});
+    solBGM.attachToMesh(planetMeshes[4]);
 
-    var audioRunning = false;
+    var audioRunning = true;
     btnAudio.onPointerClickObservable.add(function() {
         if (audioRunning === false) {
-            //Play audio here
+            solBGM.play();
             btnAudio.children[0].text = "Stop Audio";
             audioRunning = true;
         } else {
-            //Stop audio here
+            solBGM.stop();
             btnAudio.children[0].text = "Play Audio";
             audioRunning = false;
         }
