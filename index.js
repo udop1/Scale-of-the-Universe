@@ -32,6 +32,7 @@ var createScene = function() {
 
     //Create camera
     var camera = new BABYLON.ArcRotateCamera("camera", BABYLON.Tools.ToRadians(270), BABYLON.Tools.ToRadians(65), 10, BABYLON.Vector3.Zero(), scene);
+    camera.maxZ = planetsData.at(-1)[2] + 100000;
 
     //Attaches camera to canvas and makes interactable
     camera.attachControl(canvas, true);
@@ -75,16 +76,19 @@ var createScene = function() {
 
         if (i === 0) {
             newClone.position.x = 0; //Position first planet at centre
+            newClone.position.y = (planetsData[i][2] / 2); //Places bottom of planet on the plane rather than centre
         } else {
             newClone.position.x = scene.getMeshByName(planetsData[i-1][0]).position.x + (planetsData[i-1][2] / 2) + planetsData[i][3] + (planetsData[i][2] / 2); //Get previous planets position and add half of the width of it to half the width of the new planet then add a divider width
+            newClone.position.y = (planetsData[i][2] / 2); //Places bottom of planet on the plane rather than centre
         }
 
         newClone.material = new BABYLON.StandardMaterial(`${planetsData[i][0]}Material`, scene);
+        //newClone.material.useLogarithmicDepth = true;
         newClone.material.diffuseTexture = new BABYLON.Texture(planetsData[i][4], scene);
 
         if (planetsData[i][1] === "star") {
             var gl = new BABYLON.GlowLayer("glow", scene);
-            //gl.intensity = 2;
+            //gl.intensity = 1;
             gl.referenceMeshToUseItsOwnMaterial(newClone);
         }
 
@@ -95,6 +99,10 @@ var createScene = function() {
     //Set camera target
     var cameraAnimTarget = new BABYLON.TransformNode("rootCamAnimTarget");
     camera.lockedTarget = cameraAnimTarget;
+
+    //Move into camera target
+    BABYLON.Animation.CreateAndStartAnimation("moveCameraNextAnim", cameraAnimTarget, "position", 30, 100, cameraAnimTarget.position, new BABYLON.Vector3(planetMeshes[currentPlanet].position.x, planetMeshes[currentPlanet].position.y), 0, new BABYLON.CubicEase);
+
     //Zoom into camera target //https://stackoverflow.com/a/64571830
     var distance = calcCameraToBoundingDistance(planetMeshes[currentPlanet]);
 
@@ -211,7 +219,7 @@ var createScene = function() {
 
             //Move camera
             camera.lockedTarget = cameraAnimTarget;
-            BABYLON.Animation.CreateAndStartAnimation("moveCameraNextAnim", cameraAnimTarget, "position", 30, 100, cameraAnimTarget.position, new BABYLON.Vector3(planetMeshes[currentPlanet].position.x), 0, new BABYLON.CubicEase);
+            BABYLON.Animation.CreateAndStartAnimation("moveCameraNextAnim", cameraAnimTarget, "position", 30, 100, cameraAnimTarget.position, new BABYLON.Vector3(planetMeshes[currentPlanet].position.x, planetMeshes[currentPlanet].position.y), 0, new BABYLON.CubicEase);
 
             //Zoom camera //https://stackoverflow.com/a/64571830
             var distance = calcCameraToBoundingDistance(planetMeshes[currentPlanet]);
@@ -231,7 +239,7 @@ var createScene = function() {
 
             //Move camera
             camera.lockedTarget = cameraAnimTarget;
-            BABYLON.Animation.CreateAndStartAnimation("moveCameraNextAnim", cameraAnimTarget, "position", 30, 100, cameraAnimTarget.position, new BABYLON.Vector3(planetMeshes[currentPlanet].position.x), 0, new BABYLON.CubicEase);
+            BABYLON.Animation.CreateAndStartAnimation("moveCameraNextAnim", cameraAnimTarget, "position", 30, 100, cameraAnimTarget.position, new BABYLON.Vector3(planetMeshes[currentPlanet].position.x, planetMeshes[currentPlanet].position.y), 0, new BABYLON.CubicEase);
 
             //Zoom camera //https://stackoverflow.com/a/64571830
             var distance = calcCameraToBoundingDistance(planetMeshes[currentPlanet]);
