@@ -43,7 +43,7 @@ var createScene = function() {
     
     //Set light intensive (default 1)
     light.intensity = 0.7;
-    //light.groundColor = new BABYLON.Color3.White(); //Remove shadows
+    light.groundColor = new BABYLON.Color3.White(); //Remove shadows
 
     //Keep track of current planet
     var currentPlanet = 0;
@@ -65,6 +65,7 @@ var createScene = function() {
     var rootSphere = BABYLON.MeshBuilder.CreateSphere("rootMesh", {diameter: 1, segments: 32}, scene);
     rootSphere.isVisible = false; //Hide root
     rootSphere.renderingGroupId = 1; //Prevent clipping behind skybox
+    
 
     var planetMeshes = [];
     for (var i = 0; i < planetsData.length; i++) { //Loop through planets.js and create meshes
@@ -83,14 +84,16 @@ var createScene = function() {
         }
 
         newClone.material = new BABYLON.StandardMaterial(`${planetsData[i][0]}Material`, scene);
-        //newClone.material.useLogarithmicDepth = true;
+        newClone.material.useLogarithmicDepth = true;
         newClone.material.diffuseTexture = new BABYLON.Texture(planetsData[i][4], scene);
 
-        if (planetsData[i][1] === "star") {
-            var gl = new BABYLON.GlowLayer("glow", scene);
+        newClone.cullingStrategy = BABYLON.AbstractMesh.CULLINGSTRATEGY_BOUNDINGSPHERE_ONLY;
+
+        /*if (planetsData[i][1] === "star") { //With logarithmic depth enabled, glow creates mesh depth clipping
+            //var gl = new BABYLON.GlowLayer("glow", scene);
             //gl.intensity = 1;
-            gl.referenceMeshToUseItsOwnMaterial(newClone);
-        }
+            //gl.referenceMeshToUseItsOwnMaterial(newClone);
+        }*/
 
         planetMeshes.push(newClone);
     }
