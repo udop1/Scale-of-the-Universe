@@ -83,7 +83,7 @@ var createScene = function() {
             newClone.position.y = (planetsData[i][2] / 2); //Places bottom of planet on the plane rather than centre
         }
 
-        createScaleGUI(newClone);
+        createScaleGUI(newClone, i);
 
         newClone.material = new BABYLON.StandardMaterial(`${planetsData[i][0]}Material`, scene);
         newClone.material.useLogarithmicDepth = true;
@@ -101,11 +101,28 @@ var createScene = function() {
     }
 
     //Scale GUI
-    function createScaleGUI(parentMesh) {
-        //var scalePlane = BABYLON.MeshBuilder.CreateLines
-        var scalePlane = BABYLON.MeshBuilder.CreatePlane("scaleRuler", {width: parentMesh.scaling.x}, scene);
-        scalePlane.parent = parentMesh;
-        scalePlane.position.z = (parentMesh.scaling.z / 2) + (parentMesh.scaling.z / 2);
+    function createScaleGUI(parentMesh, i) {
+        var scaleLine = BABYLON.MeshBuilder.CreatePlane("scaleRuler", {width: 1, height: 0.1}, scene);
+        scaleLine.renderingGroupId = 2;
+        scaleLine.parent = parentMesh;
+        scaleLine.rotate(BABYLON.Axis.X, -90*(Math.PI/180), BABYLON.Space.LOCAL);
+        scaleLine.position.y = 0.5;
+        scaleLine.position.z = 0.1 + scaleLine.scaling.x;
+
+        var scalePlane = BABYLON.MeshBuilder.CreatePlane("scaleRuler", {width: 10, height: 1}, scene);
+        scalePlane.renderingGroupId = 2;
+        scalePlane.parent = scaleLine;
+        scalePlane.position.y = -1;
+
+
+        var scaleGUI = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(scalePlane, 10*1024, 1*1024); //Keep correct aspect ratio
+
+        var scaleText = new BABYLON.GUI.TextBlock();
+        scaleText.text = `${planetsData[i][6]} km`;
+        scaleText.color = "white";
+        scaleText.fontSize = 500;
+
+        scaleGUI.addControl(scaleText);
     }
 
 
