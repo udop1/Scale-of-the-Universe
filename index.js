@@ -83,6 +83,8 @@ var createScene = function() {
             newClone.position.y = (planetsData[i][2] / 2); //Places bottom of planet on the plane rather than centre
         }
 
+        createScaleGUI(newClone);
+
         newClone.material = new BABYLON.StandardMaterial(`${planetsData[i][0]}Material`, scene);
         newClone.material.useLogarithmicDepth = true;
         newClone.material.diffuseTexture = new BABYLON.Texture(planetsData[i][4], scene);
@@ -96,6 +98,14 @@ var createScene = function() {
         }*/
 
         planetMeshes.push(newClone);
+    }
+
+    //Scale GUI
+    function createScaleGUI(parentMesh) {
+        //var scalePlane = BABYLON.MeshBuilder.CreateLines
+        var scalePlane = BABYLON.MeshBuilder.CreatePlane("scaleRuler", {width: parentMesh.scaling.x}, scene);
+        scalePlane.parent = parentMesh;
+        scalePlane.position.z = (parentMesh.scaling.z / 2) + (parentMesh.scaling.z / 2);
     }
 
 

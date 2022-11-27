@@ -5,14 +5,6 @@
 //https://en.wikipedia.org/wiki/Stellar_classification
 const planetsData = [ //Name, Body Type, Scale, Distance Divider, Texture, Info Text
     [
-        "Earth",
-        "planet",
-        1,
-        10,
-        "./images/2k_earth_daymap.jpg",
-        "Earth\n\nOur homeworld is the densest of the eight planets in the Solar System. It is also the largest of the four terrestrial planets.\n\nSurface\nAbout 71% of the Earth\'s surface is covered by salt water oceans, and the remaining 30% is taken up by the seven continental landmasses. Earth\'s outer surface is also divided into several rigid segments, or tectonic plates, that migrate across the surface over periods of millions of years.\n\nAxial tilt\nToday, the Earth is tilted on its axis by 23.4°, producing seasonal variations in climate and weather across the surface of the planet during the course of a year.\n\nMagnetic field\nThe Earth\'s magnetic field is generated within the molten outer core region of the planet and extends outwards to form the magnetosphere: a barrier surrounding the Earth, deflecting particles of the solar wind and protecting the Earth from Sun's radiation."
-    ],
-    [
         "Moon",
         "planet",
         0.25,
@@ -27,6 +19,14 @@ const planetsData = [ //Name, Body Type, Scale, Distance Divider, Texture, Info 
         5,
         "./images/2k_mars.jpg",
         "Mars\n\nMars is the fourth planet from the Sun and the second smallest planet in the Solar System. The reddish appearance of Mars\' surface is caused by iron oxide (rust).\n\nEarth-like\nWhile the Mars is about half as big as the Earth, there are still many similarities: Mars has a rocky surface and polar ice caps, the days on Mars are only 40 minutes longer, the axial tilt gives it similar seasons to ours (although each lasts about twice as long)\n\nSurface\nMars has a dramatic landscape, with towering volcanoes and a great canyon system. Of all the planets in the Solar System, it has the highest mountain, Olympus Mons, and the largest canyon, Valles Marineris.\n\nWater\nThere is strong evidence that the Martian atmosphere was once far denser than it is now, and that water once ran freely on its surface. There is also mounting evidence that much of this water remains locked away underground.\n\nMoons\nMars has two small natural satellites, Phobos and Deimos, that orbit very close to the planet. These moons may be captured asteroids. It has been predicted that in about 50 million years, Phobos will either crash into Mars\' surface or break up into a ring structure around the planet.\n\nMissions\nMars is the focus of intense study, with two rovers (exploration rover Opportunity and science laboratory Curiosity) operating on the surface, while three international missions orbit the planet: NASA\'s Mars Odyssey and Mars Reconnaissance Orbiter and ESA\'s Mars Express.\n\nObservation\nMars can easily be seen from Earth with the naked eye, as can its reddish coloring. Its apparent magnitude is surpassed by the Sun, the Moon, Venus and Jupiter - but it can briefly match Jupiter\'s brightness at certain points in its orbit."
+    ],
+    [
+        "Earth",
+        "planet",
+        1,
+        10,
+        "./images/2k_earth_daymap.jpg",
+        "Earth\n\nOur homeworld is the densest of the eight planets in the Solar System. It is also the largest of the four terrestrial planets.\n\nSurface\nAbout 71% of the Earth\'s surface is covered by salt water oceans, and the remaining 30% is taken up by the seven continental landmasses. Earth\'s outer surface is also divided into several rigid segments, or tectonic plates, that migrate across the surface over periods of millions of years.\n\nAxial tilt\nToday, the Earth is tilted on its axis by 23.4°, producing seasonal variations in climate and weather across the surface of the planet during the course of a year.\n\nMagnetic field\nThe Earth\'s magnetic field is generated within the molten outer core region of the planet and extends outwards to form the magnetosphere: a barrier surrounding the Earth, deflecting particles of the solar wind and protecting the Earth from Sun's radiation."
     ],
     [
         "Jupiter",
@@ -56,9 +56,17 @@ const planetsData = [ //Name, Body Type, Scale, Distance Divider, Texture, Info 
         "Pollux",
         "star",
         981,
-        30,
+        20,
         "./images/2k_star_K.jpg",
         "Pollux\n\nLorum Ipsum"
+    ],
+    [
+        "Arcturus",
+        "star",
+        2725,
+        20,
+        "./images/2k_star_K.jpg",
+        "Arcturus\n\nLorum Ipsum"
     ],
     [
         "Betelgeuse",
