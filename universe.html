@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>UniScale - Universe</title>
+
+        <script src="./planets.js"></script>
+
+        <style>
+            html, body {
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            #renderCanvas {
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="renderCanvas"></canvas>
+        
+        <script src="./modules/babylon.js"></script>
+        <script src="./modules/babylon.gui.min.js"></script>
+        <!-- <script src="./modules/babylon.inspector.bundle.js"></script> -->
+        <!-- <script src="./modules/babylon.viewer.js"></script> -->
+        <!-- <script src="./modules/babylonjs.loaders.min.js"></script> -->
+        <!-- <script src="./modules/babylonjs.materials.min.js"></script> -->
+        <!-- <script src="./modules/babylonjs.postProcess.min.js"></script> -->
+        <!-- <script src="./modules/babylonjs.proceduralTextures.min.js"></script> -->
+        <!-- <script src="./modules/babylonjs.serializers.min.js"></script> -->
+        <script src="./modules/earcut.min.js"></script>
+        <script src="./universe.js"></script>
+    </body>
+</html>

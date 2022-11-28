@@ -102,12 +102,6 @@ var createScene = function() {
     }
     displayScalePlane(currentPlanet); //Hide all except current
 
-    /*
-    //////////////////////////////////////////////////////////////////////////////
-    MAYBE ADD A GUI ELEMENT THAT SHOWS THE SCALE OF THE ENTIRE THING, LIKE 12742:1
-    //////////////////////////////////////////////////////////////////////////////
-    */
-
 
     //Scale GUI
     function createScaleGUI(parentMesh, i) {
@@ -245,6 +239,20 @@ var createScene = function() {
     btnAudio.background = "black";
     btnAudio.children[0].color = "white";
 
+    var txtScaleContainer = new BABYLON.GUI.Container();
+    txtScaleContainer.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
+    txtScaleContainer.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+    txtScaleContainer.adaptWidthToChildren = true;
+    txtScaleContainer.left = "-10px";
+    txtScaleContainer.height = "50px";
+
+    var txtScale = new BABYLON.GUI.TextBlock("txtScale", scene);
+    txtScale.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+    txtScale.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
+    txtScale.width = "200px";
+    txtScale.text = "Universe Scale: 12742:1";
+    txtScale.color = "white";
+
     function changeInfoText(text) { //Allows info text to change
         infoText.text = text;
     };
@@ -254,6 +262,8 @@ var createScene = function() {
     gui.addControl(btnNext);
     gui.addControl(btnRecentre);
     gui.addControl(btnAudio);
+    gui.addControl(txtScaleContainer);
+    txtScaleContainer.addControl(txtScale);
 
     gui.addControl(infoContainer);
     infoContainer.addControl(btnHideInfo);
@@ -387,7 +397,7 @@ var createScene = function() {
         }
     });
 
-
+    
     return scene;
 };
 
@@ -404,7 +414,13 @@ window.initFunction = async function() {
     window.engine = await asyncEngineCreation();
     if (!engine) throw 'engine should not be null.';
     startRenderLoop(engine, canvas);
+
+    engine.displayLoadingUI(); //Wait for scene to load
     window.scene = createScene();
+
+    scene.executeWhenReady(() => { //Remove loading screen once scene has loaded
+        engine.hideLoadingUI();
+    });
 };
 initFunction().then(() => {
     sceneToRender = scene;
