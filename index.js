@@ -8,6 +8,7 @@
 /// <reference path="modules/babylonjs.proceduralTextures.min.js" />
 /// <reference path="modules/babylonjs.serializers.min.js" />
 /// <reference path="modules/babylon.viewer.js" />
+/// <reference path="modules/earcut.min.js" />
 
 var canvas = document.getElementById("renderCanvas");
 
@@ -99,20 +100,44 @@ var createScene = function() {
 
         planetMeshes.push(newClone);
     }
+    displayScalePlane(currentPlanet); //Hide all except current
+
+    /*
+    //////////////////////////////////////////////////////////////////////////////
+    MAYBE ADD A GUI ELEMENT THAT SHOWS THE SCALE OF THE ENTIRE THING, LIKE 12742:1
+    //////////////////////////////////////////////////////////////////////////////
+    */
+
 
     //Scale GUI
     function createScaleGUI(parentMesh, i) {
-        var scaleLine = BABYLON.MeshBuilder.CreatePlane("scaleRuler", {width: 1, height: 0.1}, scene);
+        const corners = [
+            new BABYLON.Vector3(0, 0, 0),
+            new BABYLON.Vector3(0.5, 0, 0),
+            new BABYLON.Vector3(-0.5, 0, 1),
+            new BABYLON.Vector3(-1.5, 0, 0),
+            new BABYLON.Vector3(-1, 0, 0),
+            new BABYLON.Vector3(-1, 0, -3),
+            new BABYLON.Vector3(-1.5, 0, -3),
+            new BABYLON.Vector3(-0.5, 0, -4),
+            new BABYLON.Vector3(0.5, 0, -3),
+            new BABYLON.Vector3(0, 0, -3)
+        ];
+        var scaleLine = new BABYLON.MeshBuilder.CreatePolygon("scaleRuler", {shape: corners, sideOrientation: BABYLON.Mesh.DOUBLESIDE}, scene, earcut);
         scaleLine.renderingGroupId = 2;
+        scaleLine.setPivotPoint(new BABYLON.Vector3(-0.75, 0, -0.25).subtract(scaleLine.position));
         scaleLine.parent = parentMesh;
-        scaleLine.rotate(BABYLON.Axis.X, -90*(Math.PI/180), BABYLON.Space.LOCAL);
-        scaleLine.position.y = 0.5;
-        scaleLine.position.z = 0.1 + scaleLine.scaling.x;
+        scaleLine.rotate(BABYLON.Axis.Y, -90*(Math.PI/180), BABYLON.Space.LOCAL);
+        scaleLine.scaling = new BABYLON.Vector3(0.25, 1, 0.25);
+        scaleLine.position = new BABYLON.Vector3(0.44, 0.5, 0.75 + scaleLine.scaling.x);
 
-        var scalePlane = BABYLON.MeshBuilder.CreatePlane("scaleRuler", {width: 10, height: 1}, scene);
+        var scalePlane = BABYLON.MeshBuilder.CreatePlane("scaleRulerText", {width: 10, height: 1}, scene);
         scalePlane.renderingGroupId = 2;
-        scalePlane.parent = scaleLine;
-        scalePlane.position.y = -1;
+        scalePlane.parent = parentMesh;
+        /*scalePlane.rotate(BABYLON.Axis.X, -90*(Math.PI/180), BABYLON.Space.LOCAL); //Normal Plane Pos
+        scalePlane.position = new BABYLON.Vector3(0, 0.5, scaleLine.position.z + 0.75); //Normal Plane Pos*/
+        scalePlane.position = new BABYLON.Vector3(0, -0.5, 0.75 - scaleLine.position.z - 1.5); //Billboard Mode Pos
+        scalePlane.billboardMode = BABYLON.Mesh.BILLBOARDMODE_ALL;
 
 
         var scaleGUI = BABYLON.GUI.AdvancedDynamicTexture.CreateForMesh(scalePlane, 10*1024, 1*1024); //Keep correct aspect ratio
@@ -246,6 +271,7 @@ var createScene = function() {
         } else {
             currentPlanet -= 1;
             changeInfoText(planetsData[currentPlanet][5]);
+            displayScalePlane(currentPlanet);
 
             //Move camera
             camera.lockedTarget = cameraAnimTarget;
@@ -266,6 +292,7 @@ var createScene = function() {
         } else {
             currentPlanet += 1;
             changeInfoText(planetsData[currentPlanet][5]);
+            displayScalePlane(currentPlanet);
 
             //Move camera
             camera.lockedTarget = cameraAnimTarget;
@@ -292,6 +319,16 @@ var createScene = function() {
         var halfCameraFOV = (camera.fov/2); //In radians
 
         return meshRadiusMax/Math.sin(halfCameraFOV);
+    };
+
+    function displayScalePlane(currentPlanet) {
+        for (var i=0; i < planetMeshes.length; i++) {
+            for (var j=0; j < planetMeshes[i]._children.length; j++){
+                planetMeshes[i]._children[j].isVisible = false;
+
+                planetMeshes[currentPlanet]._children[j].isVisible = true;
+            }
+        }
     };
 
 
