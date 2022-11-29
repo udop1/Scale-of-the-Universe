@@ -102,6 +102,8 @@ var createScene = function() {
     }
     displayScalePlane(currentPlanet); //Hide all except current
 
+    camera.wheelPrecision = 20/planetMeshes[currentPlanet].scaling.x; //Set scroll speed
+
 
     //Scale GUI
     function createScaleGUI(parentMesh, i) {
@@ -283,6 +285,9 @@ var createScene = function() {
             changeInfoText(planetsData[currentPlanet][5]);
             displayScalePlane(currentPlanet);
 
+            //Set scroll speed
+            camera.wheelPrecision = 20/planetMeshes[currentPlanet].scaling.x;
+
             //Move camera
             camera.lockedTarget = cameraAnimTarget;
             BABYLON.Animation.CreateAndStartAnimation("moveCameraNextAnim", cameraAnimTarget, "position", 30, 100, cameraAnimTarget.position, new BABYLON.Vector3(planetMeshes[currentPlanet].position.x, planetMeshes[currentPlanet].position.y), 0, new BABYLON.CubicEase);
@@ -303,6 +308,9 @@ var createScene = function() {
             currentPlanet += 1;
             changeInfoText(planetsData[currentPlanet][5]);
             displayScalePlane(currentPlanet);
+
+            //Set scroll speed
+            camera.wheelPrecision = 20/planetMeshes[currentPlanet].scaling.x;
 
             //Move camera
             camera.lockedTarget = cameraAnimTarget;
