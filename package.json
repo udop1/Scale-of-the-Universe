@@ -1,21 +1,21 @@
 {
-  "name": "scale-of-the-universe",
+  "name": "uniscale",
   "version": "1.0.0",
   "description": "Creating a visualisation of the scale of the universe for my University module.",
-  "main": "index.js",
+  "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/udop1/scale-of-the-universe.git"
+    "url": "git+https://github.com/udop1/UniScale.git"
   },
-  "author": "udop1",
+  "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/udop1/scale-of-the-universe/issues"
+    "url": "https://github.com/udop1/UniScale/issues"
   },
-  "homepage": "https://github.com/udop1/scale-of-the-universe#readme",
+  "homepage": "https://github.com/udop1/UniScale#readme",
   "dependencies": {
     "babylonjs": "^5.29.0",
     "babylonjs-gui": "^5.29.0",
