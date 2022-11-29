@@ -55,7 +55,7 @@ const planetsData = [ //Name, Body Type, Scale, Distance Divider, Texture, Info 
         218,
         20,
         "./images/2k_star_A.jpg",
-        "Sirius A\n\nLorum Ipsum",
+        "Sirius A\n\nSirius, also called Alpha Canis Majoris or the Dog Star, brightest star in the night sky, with apparent visual magnitude -1.46. It is a binary star in the constellation Canis Major.\n\nThe bright component of the binary is a blue-white star 25.4 times as luminous as the Sun. It has a radius 1.71 times that of the Sun and a surface temperature of 9,940 kelvins (K), which is more than 4,000 K higher than that of the Sun. Its distance from the solar system is 8.6 light-years, only twice the distance of the nearest known star system beyond the Sun, the Alpha Centauri system.\n\nIts name comes from a Greek word meaning \"sparkling\" or \"scorching.\"",
         "2.38 million"
     ],
     [
@@ -64,7 +64,7 @@ const planetsData = [ //Name, Body Type, Scale, Distance Divider, Texture, Info 
         981,
         20,
         "./images/2k_star_K.jpg",
-        "Pollux\n\nLorum Ipsum",
+        "Pollux\n\nPollux, also called Beta Geminorum, brightest star in the zodiacal constellation Gemini. The star is a red giant that has finished fusing hydrogen in its core and is now fusing other lighter elements into heavier ones. The star has a temperature of 8,360 F (4,627 C). Pollux is 33.7 light-years from Earth.\n\nRecently, astronomers discovered that the star has an extrasolar planet, or exoplanet. At the time of the discovery publication in 2006, scientists estimated it has a mass at least 2.3 times that of Jupiter, with an orbital period of almost 590 days.",
         "12.24 million"
     ],
     [
@@ -73,7 +73,7 @@ const planetsData = [ //Name, Body Type, Scale, Distance Divider, Texture, Info 
         2725,
         20,
         "./images/2k_star_K.jpg",
-        "Arcturus\n\nLorum Ipsum",
+        "Arcturus\n\nArcturus is a red giant star in the Northern Hemisphere of Earth\'s sky and the brightest star in the constellation Boötes (the herdsman). Arcturus can be found around 37 light-years away from Earth and is the 4th brightest star in the night sky. Astronomers say Arcturus will end up as a white dwarf at the end of its life.\n\nThe name Artcurus comes from the Greek meaning \"keeper or guardian of the bear\", which refers to the its position adjacent to the tail of the constellation Ursa Major (the Great Bear).",
         "35.34 million"
     ]
 ];
