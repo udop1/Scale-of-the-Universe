@@ -1,4 +1,4 @@
-# Scale of the Universe
+# UniScale
 Creating a visualisation of the scale of the universe for my University module.
 
 ### References
