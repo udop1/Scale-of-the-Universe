@@ -388,7 +388,7 @@ var createScene = function() {
     });
 
 
-    //Audio //https://doc.babylonjs.com/features/featuresDeepDive/audio/playingSoundsMusic
+    //Audio
     var solBGM = new BABYLON.Sound("solSystemBGM", "./sound/Dreamy Flashback.mp3", scene, null, {loop: true, autoplay: true});
 
     var audioRunning = true;
