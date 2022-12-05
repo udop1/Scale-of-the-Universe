@@ -107,7 +107,7 @@ var createScene = function() {
 
     //Scale GUI
     function createScaleGUI(parentMesh, i) {
-        const corners = [
+        const corners = [ //Arrow plane coordinates
             new BABYLON.Vector3(0, 0, 0),
             new BABYLON.Vector3(0.5, 0, 0),
             new BABYLON.Vector3(-0.5, 0, 1),
