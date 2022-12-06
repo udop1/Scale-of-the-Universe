@@ -276,7 +276,7 @@ var createScene = function() {
     //Planet Navigation
     btnBack.onPointerClickObservable.add(function() {
         if (currentPlanet <= 0) {
-            //Zoom camera //https://stackoverflow.com/a/64571830
+            //Zoom camera
             var distance = calcCameraToBoundingDistance(planetMeshes[currentPlanet]);
 
             BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, distance, 0, new BABYLON.CubicEase);
@@ -292,7 +292,7 @@ var createScene = function() {
             camera.lockedTarget = cameraAnimTarget;
             BABYLON.Animation.CreateAndStartAnimation("moveCameraNextAnim", cameraAnimTarget, "position", 30, 100, cameraAnimTarget.position, new BABYLON.Vector3(planetMeshes[currentPlanet].position.x, planetMeshes[currentPlanet].position.y), 0, new BABYLON.CubicEase);
 
-            //Zoom camera //https://stackoverflow.com/a/64571830
+            //Zoom camera
             var distance = calcCameraToBoundingDistance(planetMeshes[currentPlanet]);
 
             BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, distance, 0, new BABYLON.CubicEase);
@@ -300,7 +300,7 @@ var createScene = function() {
     });
     btnNext.onPointerClickObservable.add(function() {
         if (currentPlanet >= (planetsData.length - 1)) {
-            //Zoom camera //https://stackoverflow.com/a/64571830
+            //Zoom camera
             var distance = calcCameraToBoundingDistance(planetMeshes[currentPlanet]);
 
             BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, distance, 0, new BABYLON.CubicEase);
@@ -316,14 +316,14 @@ var createScene = function() {
             camera.lockedTarget = cameraAnimTarget;
             BABYLON.Animation.CreateAndStartAnimation("moveCameraNextAnim", cameraAnimTarget, "position", 30, 100, cameraAnimTarget.position, new BABYLON.Vector3(planetMeshes[currentPlanet].position.x, planetMeshes[currentPlanet].position.y), 0, new BABYLON.CubicEase);
 
-            //Zoom camera //https://stackoverflow.com/a/64571830
+            //Zoom camera
             var distance = calcCameraToBoundingDistance(planetMeshes[currentPlanet]);
 
             BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, distance, 0, new BABYLON.CubicEase);
         }
     });
     btnRecentre.onPointerClickObservable.add(function() {
-        //Zoom camera //https://stackoverflow.com/a/64571830
+        //Zoom camera
         var distance = calcCameraToBoundingDistance(planetMeshes[currentPlanet]);
 
         BABYLON.Animation.CreateAndStartAnimation("cameraCentreAnim", camera, "radius", 30, 100, camera.radius, distance, 0, new BABYLON.CubicEase);
